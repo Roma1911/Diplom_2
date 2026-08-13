@@ -3,6 +3,13 @@ import requests
 from conftest import BASE_URL
 from data import INVALID_INGREDIENT_HASH
 import allure
+from constants import (
+    TWO_HUNDRED,
+    FOUR_HUNDRED,
+    FIVE_HUNDRED,
+    INGREDIENT_IDS
+)
+
 
 @allure.title("Создание заказа")
 class TestCreatingOrder:
@@ -14,7 +21,7 @@ class TestCreatingOrder:
             json={"ingredients": ingredient_ids},
             headers=auth_header
         )
-        assert response.status_code == 200
+        assert response.status_code == TWO_HUNDRED
         assert response.json()["success"] is True
         assert "order" in response.json()
         assert "number" in response.json()["order"]
@@ -25,7 +32,7 @@ class TestCreatingOrder:
             f"{BASE_URL}/orders",
             json={"ingredients": ingredient_ids}
         )
-        assert response.status_code == 200
+        assert response.status_code == TWO_HUNDRED
         assert response.json()["success"] is True
         assert "order" in response.json()
 
@@ -35,7 +42,7 @@ class TestCreatingOrder:
             f"{BASE_URL}/orders",
             json={"ingredients": ingredient_ids}
         )
-        assert response.status_code == 200
+        assert response.status_code == TWO_HUNDRED
         assert response.json()["success"] is True
         assert "order" in response.json()
 
@@ -45,9 +52,9 @@ class TestCreatingOrder:
             f"{BASE_URL}/orders",
             json={"ingredients": []}
         )
-        assert response.status_code == 400
+        assert response.status_code == FOUR_HUNDRED
         assert response.json()["success"] is False
-        assert response.json()["message"] == "Ingredient ids must be provided"
+        assert response.json()["message"] == INGREDIENT_IDS
 
     @allure.title("Создание заказа с неверным хешем ингредиентов")
     def test_create_order_invalid_hash(self):
@@ -55,4 +62,4 @@ class TestCreatingOrder:
             f"{BASE_URL}/orders",
             json={"ingredients": [INVALID_INGREDIENT_HASH]}
         )
-        assert response.status_code == 500
+        assert response.status_code == FIVE_HUNDRED

@@ -3,6 +3,12 @@ import requests
 from conftest import BASE_URL
 from data import INVALID_LOGIN_DATA
 import allure
+from constants import (
+    TWO_HUNDRED,
+    FOUR_HUNDRED_ONE,
+    ERROR_TEXT 
+)
+
 
 @allure.title("Логин пользователя")
 class TestLogin:
@@ -13,7 +19,7 @@ class TestLogin:
             f"{BASE_URL}/auth/login",
             json={"email": new_user["email"], "password": new_user["password"]}
         )
-        assert response.status_code == 200
+        assert response.status_code == TWO_HUNDRED
         assert response.json()["success"] is True
         assert "accessToken" in response.json()
         assert "refreshToken" in response.json()
@@ -26,6 +32,6 @@ class TestLogin:
             f"{BASE_URL}/auth/login",
             json=credentials
         )
-        assert response.status_code == 401
+        assert response.status_code == FOUR_HUNDRED_ONE
         assert response.json()["success"] is False
-        assert response.json()["message"] == "email or password are incorrect"
+        assert response.json()["message"] == ERROR_TEXT 

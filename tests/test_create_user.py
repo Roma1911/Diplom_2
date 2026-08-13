@@ -3,6 +3,12 @@ import requests
 from conftest import BASE_URL
 from data import MISSING_FIELDS_DATA
 import allure
+from constants import (
+    REGISTER_USER_EXISTS_ERROR,
+    MISSING_FIELDS_ERROR,
+    SUCCESS_KEY,
+    FOUR_HUNDRED_THREE
+)
 
 @allure.title("Создание пользователя")
 class TestCreateUser:
@@ -19,9 +25,9 @@ class TestCreateUser:
             f"{BASE_URL}/auth/register",
             json=existing_user
         )
-        assert response.status_code == 403
-        assert response.json()["success"] is False
-        assert response.json()["message"] == "User already exists"
+        assert response.status_code == FOUR_HUNDRED_THREE
+        assert response.json()[SUCCESS_KEY] is False
+        assert response.json()["message"] == REGISTER_USER_EXISTS_ERROR
 
     @allure.title("создать пользователя и не заполнить одно из обязательных полей")
     @pytest.mark.parametrize("body", MISSING_FIELDS_DATA)
@@ -30,6 +36,6 @@ class TestCreateUser:
             f"{BASE_URL}/auth/register",
             json=body
         )
-        assert response.status_code == 403
-        assert response.json()["success"] is False
-        assert response.json()["message"] == "Email, password and name are required fields"
+        assert response.status_code == FOUR_HUNDRED_THREE
+        assert response.json()[SUCCESS_KEY] is False
+        assert response.json()["message"] == MISSING_FIELDS_ERROR
